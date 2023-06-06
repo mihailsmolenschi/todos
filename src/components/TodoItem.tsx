@@ -10,11 +10,14 @@ const TodoItem: FunctionComponent<{
     const uiCtx = useContext(UiContext);
     const todosCtx = useContext(TodosContext);
 
-    const isEditModeOpen = uiCtx.isEditingTodos;
-    const isEditingTodo = uiCtx.isEditingTodo;
-    const todoEditId = uiCtx.currentEditingTodoId;
+    const foundItem = todosCtx.items.find((item) => item.id === id);
+    const isButtonDisabled = inputStateText === foundItem?.text;
 
-    const currentTodoIndex = todosCtx.items.findIndex((item) => item.id === id);
+    const isEditModeOpen = uiCtx.isEditingTodos;
+
+    const currentEditTodoId = todosCtx.editTodoId;
+
+    const isCurrentEditingTodo = currentEditTodoId === id;
 
     const inputChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
         const inputValue = event.currentTarget.value;
@@ -23,33 +26,52 @@ const TodoItem: FunctionComponent<{
 
     const formSubmitHandler = (event: React.FormEvent) => {
         event.preventDefault();
-        todosCtx.updateTodo(id, inputStateText);
-        uiCtx.toggleEditTodo();
+
+        todosCtx.updateTodo(id, "in-progress", inputStateText);
     };
 
-    const cancelHandler = () => {
+    const cancelEditingTodo = () => {
         setInputStateText(text);
-        uiCtx.toggleEditTodo();
+        todosCtx.changeEditTodoId("");
     };
 
-    const toggleCompleted = (id: string) => {
-        if (isEditModeOpen || isEditingTodo) return;
-
-        const foundIndex = todosCtx.items.findIndex((todo) => todo.id === id);
-        todosCtx.updateTodo(id, todosCtx.items[foundIndex].text, "completed");
+    const changeTodoStatusToComplete = () => {
+        todosCtx.updateTodo(id, "completed");
     };
 
     const startEditingTodo = () => {
-        if (isEditModeOpen) {
-            uiCtx.toggleEditTodo(id);
-            return;
-        }
-        toggleCompleted(id);
+        todosCtx.changeEditTodoId(id);
     };
 
-    if (isEditModeOpen && isEditingTodo && id === todoEditId) {
-        return (
-            <li>
+    const revertInputHandler = () => {
+        setInputStateText(text);
+    };
+
+    const removeTodoHandler = () => {
+        todosCtx.removeTodo(id);
+    };
+
+    return (
+        <li>
+            {!isEditModeOpen && (
+                <p onClick={changeTodoStatusToComplete}>{inputStateText}</p>
+            )}
+
+            {isEditModeOpen && !isCurrentEditingTodo && (
+                <>
+                    <p onClick={startEditingTodo}>{inputStateText}</p>
+
+                    <button title="remove" onClick={removeTodoHandler}>
+                        🗑️
+                    </button>
+
+                    <button title="edit" onClick={startEditingTodo}>
+                        ✍️
+                    </button>
+                </>
+            )}
+
+            {isEditModeOpen && isCurrentEditingTodo && (
                 <form onSubmit={formSubmitHandler}>
                     <input
                         autoFocus
@@ -58,93 +80,30 @@ const TodoItem: FunctionComponent<{
                     />
                     <button
                         type="submit"
-                        disabled={
-                            inputStateText ===
-                            todosCtx.items[currentTodoIndex].text
-                        }
                         title="confirm"
+                        disabled={isButtonDisabled}
                     >
                         ✔️
                     </button>
                     <button
                         type="button"
-                        disabled={
-                            inputStateText ===
-                            todosCtx.items[currentTodoIndex].text
-                        }
-                        onClick={() => {
-                            setInputStateText(
-                                todosCtx.items[currentTodoIndex].text
-                            );
-                        }}
                         title="revert"
+                        disabled={isButtonDisabled}
+                        onClick={revertInputHandler}
                     >
                         ➰
                     </button>
-                    <button type="reset" onClick={cancelHandler} title="cancel">
+                    <button
+                        type="reset"
+                        title="cancel"
+                        onClick={cancelEditingTodo}
+                    >
                         ✖️
                     </button>
                 </form>
-            </li>
-        );
-    }
-
-    if (isEditModeOpen && isEditingTodo && id !== todoEditId) {
-        return (
-            <li>
-                <p onClick={startEditingTodo}>{inputStateText}</p>
-
-                <button title="remove" onClick={() => todosCtx.removeTodo(id)}>
-                    🗑️
-                </button>
-
-                <button title="edit" onClick={() => uiCtx.toggleEditTodo(id)}>
-                    ✍️
-                </button>
-            </li>
-        );
-    }
-
-    if (isEditModeOpen && !isEditingTodo && id !== todoEditId) {
-        return (
-            <li>
-                <p onClick={startEditingTodo}>{inputStateText}</p>
-
-                <button title="remove" onClick={() => todosCtx.removeTodo(id)}>
-                    🗑️
-                </button>
-
-                <button title="edit" onClick={() => uiCtx.toggleEditTodo(id)}>
-                    ✍️
-                </button>
-            </li>
-        );
-    }
-
-    if (!isEditModeOpen && !isEditingTodo && id !== todoEditId) {
-        return (
-            <li>
-                <p onClick={startEditingTodo}>{inputStateText}</p>
-            </li>
-        );
-    }
-
-    return (
-        <li>
-            <p onClick={startEditingTodo}>{inputStateText}</p>
+            )}
         </li>
     );
 };
 
 export default TodoItem;
-
-// -- pseudo code, to fix
-// return (
-//     <li>
-//         {isEditing
-//             ? isCurrentEditingTodo
-//                 ? "render edit todo (with 3 buttons)"
-//                 : "render edit mode todo (with 2 buttons)"
-//             : "render simple todo ( with no buttons)"}
-//     </li>
-// );

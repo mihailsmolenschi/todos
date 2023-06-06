@@ -7,13 +7,8 @@ import {
 
 export const UiContext = createContext({
     isEditingTodos: false,
-    isEditingTodo: false,
-    currentEditingTodoId: "",
     isRemovingPromptOpen: false,
     toggleEditMode: () => {
-        return;
-    },
-    toggleEditTodo: (id?: string) => {
         return;
     },
     closeEditMode: () => {
@@ -29,35 +24,14 @@ export const UiContext = createContext({
 
 const UiContextProvider: FunctionComponent<PropsWithChildren> = (props) => {
     const [isEditingTodos, setIsEditingTodos] = useState(false);
-    const [isEditingTodo, setIsEditingTodo] = useState(false);
-    const [currentEditingTodoId, setCurrentEditingTodoId] = useState("");
     const [isRemovingPromptOpen, setIsRemovingPromptOpen] = useState(false);
 
     const toggleEditMode = () => {
-        console.log("- TOGGLE EDIT MODE");
-        if (isEditingTodos) {
-            setIsEditingTodo(false);
-        }
-        setCurrentEditingTodoId("");
         setIsEditingTodos((prevIsEditing) => !prevIsEditing);
     };
 
     const closeEditMode = () => {
         setIsEditingTodos(false);
-        setIsEditingTodo(false);
-        setCurrentEditingTodoId("");
-    };
-
-    const toggleEditTodo = (id = "") => {
-        console.log("- TOGGLE EDIT TODO");
-
-        if (currentEditingTodoId !== id) {
-            setIsEditingTodo(true);
-        } else {
-            setIsEditingTodo((prevIsEditing) => !prevIsEditing);
-        }
-
-        setCurrentEditingTodoId(id);
     };
 
     const closeRemovingPrompt = () => {
@@ -70,12 +44,9 @@ const UiContextProvider: FunctionComponent<PropsWithChildren> = (props) => {
 
     const uiContextObj = {
         isEditingTodos,
-        isEditingTodo,
-        currentEditingTodoId,
         isRemovingPromptOpen,
         toggleEditMode,
         closeEditMode,
-        toggleEditTodo,
         openRemovingPrompt,
         closeRemovingPrompt,
     };

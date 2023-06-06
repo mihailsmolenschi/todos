@@ -11,13 +11,10 @@ const CompletedTodos = () => {
         (todo) => todo.status === "completed"
     );
 
-    const completeHandler = (id: string) => {
-        if (uiCtx.isEditingTodos || uiCtx.isEditingTodo) return;
+    const changeTodoStatusToInProgress = (id: string) => {
+        if (uiCtx.isEditingTodos) return;
 
-        const foundIndex = todosCtx.items.findIndex((todo) => todo.id === id);
-        const foundItem = todosCtx.items[foundIndex];
-        const toggleStatus = foundItem.status ? "" : "completed";
-        todosCtx.updateTodo(id, foundItem.text, toggleStatus);
+        todosCtx.updateTodo(id, "in-progress");
     };
 
     if (!filteredTodos.length) return null;
@@ -27,7 +24,10 @@ const CompletedTodos = () => {
             <h3>Completed</h3>
             <ul>
                 {filteredTodos.map((todo) => (
-                    <li key={todo.id} onClick={() => completeHandler(todo.id)}>
+                    <li
+                        key={todo.id}
+                        onClick={() => changeTodoStatusToInProgress(todo.id)}
+                    >
                         <p
                             style={{
                                 textDecoration: "line-through",

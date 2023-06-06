@@ -21,6 +21,7 @@ function App() {
     const toggleEditModeHandler = () => {
         uiCtx.closeRemovingPrompt();
         uiCtx.toggleEditMode();
+        todosCtx.changeEditTodoId("");
     };
 
     // const [lightThemeOn, setIsLightThemeOn] = useState(false);

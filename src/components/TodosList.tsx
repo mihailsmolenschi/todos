@@ -4,7 +4,9 @@ import TodoItem from "./TodoItem";
 
 const TodosList = () => {
     const todosCtx = useContext(TodosContext);
-    const filteredTodos = todosCtx.items.filter((todo) => todo.status === "");
+    const filteredTodos = todosCtx.items.filter(
+        (todo) => todo.status === "in-progress"
+    );
 
     const todosList = filteredTodos.map((todoItem) => (
         <TodoItem key={todoItem.id} id={todoItem.id} text={todoItem.text} />
