@@ -3,11 +3,13 @@ import {
     FunctionComponent,
     PropsWithChildren,
     useState,
+    useEffect,
 } from "react";
 
 export const UiContext = createContext({
     isEditingTodos: false,
     isRemovingPromptOpen: false,
+    isLightThemeOn: false,
     toggleEditMode: () => {
         return;
     },
@@ -20,11 +22,22 @@ export const UiContext = createContext({
     closeRemovingPrompt: () => {
         return;
     },
+    toggleUiTheme: () => {
+        return;
+    },
 });
 
 const UiContextProvider: FunctionComponent<PropsWithChildren> = (props) => {
+    const loadTheme: boolean =
+        JSON.parse(localStorage.getItem("isLightThemeOn")) || false;
+
     const [isEditingTodos, setIsEditingTodos] = useState(false);
     const [isRemovingPromptOpen, setIsRemovingPromptOpen] = useState(false);
+    const [isLightThemeOn, setIsLightThemeOn] = useState(loadTheme);
+
+    useEffect(() => {
+        localStorage.setItem("isLightThemeOn", JSON.stringify(isLightThemeOn));
+    });
 
     const toggleEditMode = () => {
         setIsEditingTodos((prevIsEditing) => !prevIsEditing);
@@ -42,13 +55,19 @@ const UiContextProvider: FunctionComponent<PropsWithChildren> = (props) => {
         setIsRemovingPromptOpen(true);
     };
 
+    const toggleUiTheme = () => {
+        setIsLightThemeOn((prev) => !prev);
+    };
+
     const uiContextObj = {
         isEditingTodos,
         isRemovingPromptOpen,
+        isLightThemeOn,
         toggleEditMode,
         closeEditMode,
         openRemovingPrompt,
         closeRemovingPrompt,
+        toggleUiTheme,
     };
 
     return (

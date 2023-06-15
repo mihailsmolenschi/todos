@@ -10,6 +10,8 @@ const TodoItem: FunctionComponent<{
     const uiCtx = useContext(UiContext);
     const todosCtx = useContext(TodosContext);
 
+    const isLightThemeOn = uiCtx.isLightThemeOn;
+
     const foundItem = todosCtx.items.find((item) => item.id === id);
     const isButtonDisabled = inputStateText === foundItem?.text;
 
@@ -54,18 +56,36 @@ const TodoItem: FunctionComponent<{
     return (
         <li>
             {!isEditModeOpen && (
-                <p onClick={changeTodoStatusToComplete}>{inputStateText}</p>
+                <p
+                    className={isLightThemeOn ? "light-theme--element" : ""}
+                    onClick={changeTodoStatusToComplete}
+                >
+                    {inputStateText}
+                </p>
             )}
 
             {isEditModeOpen && !isCurrentEditingTodo && (
                 <>
-                    <p onClick={startEditingTodo}>{inputStateText}</p>
+                    <p
+                        className={isLightThemeOn ? "light-theme--element" : ""}
+                        onClick={startEditingTodo}
+                    >
+                        {inputStateText}
+                    </p>
 
-                    <button title="remove" onClick={removeTodoHandler}>
+                    <button
+                        className={isLightThemeOn ? "light-theme--element" : ""}
+                        title="remove"
+                        onClick={removeTodoHandler}
+                    >
                         🗑️
                     </button>
 
-                    <button title="edit" onClick={startEditingTodo}>
+                    <button
+                        className={isLightThemeOn ? "light-theme--element" : ""}
+                        title="edit"
+                        onClick={startEditingTodo}
+                    >
                         ✍️
                     </button>
                 </>
@@ -74,11 +94,13 @@ const TodoItem: FunctionComponent<{
             {isEditModeOpen && isCurrentEditingTodo && (
                 <form onSubmit={formSubmitHandler}>
                     <input
+                        className={isLightThemeOn ? "light-theme--element" : ""}
                         autoFocus
                         value={inputStateText}
                         onChange={inputChangeHandler}
                     />
                     <button
+                        className={isLightThemeOn ? "light-theme--element" : ""}
                         type="submit"
                         title="confirm"
                         disabled={isButtonDisabled}
@@ -86,6 +108,7 @@ const TodoItem: FunctionComponent<{
                         ✔️
                     </button>
                     <button
+                        className={isLightThemeOn ? "light-theme--element" : ""}
                         type="button"
                         title="revert"
                         disabled={isButtonDisabled}
@@ -94,6 +117,7 @@ const TodoItem: FunctionComponent<{
                         ➰
                     </button>
                     <button
+                        className={isLightThemeOn ? "light-theme--element" : ""}
                         type="reset"
                         title="cancel"
                         onClick={cancelEditingTodo}

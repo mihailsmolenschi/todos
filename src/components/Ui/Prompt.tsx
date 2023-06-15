@@ -6,28 +6,36 @@ const Prompt = () => {
     const todosCtx = useContext(TodosContext);
     const uiCtx = useContext(UiContext);
 
+    const isLightThemeOn = uiCtx.isLightThemeOn;
+
     const removeAllTodosHandler = () => {
         todosCtx.removeAllTodos();
         uiCtx.closeRemovingPrompt();
     };
 
     return (
-        <div className="prompt-container">
+        <div
+            className={
+                isLightThemeOn
+                    ? "prompt-container light-theme--container"
+                    : "prompt-container"
+            }
+        >
             <h3>Remove all todos?</h3>
 
             <button
+                className="confirm"
                 type="button"
                 onClick={removeAllTodosHandler}
                 title="confirm"
-                className="confirm"
             >
                 ✔️
             </button>
             <button
+                className="cancel"
                 type="button"
                 onClick={uiCtx.closeRemovingPrompt}
                 title="cancel"
-                className="cancel"
             >
                 ✖️
             </button>

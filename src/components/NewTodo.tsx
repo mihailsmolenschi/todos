@@ -8,6 +8,8 @@ const NewTodo = () => {
     const todoCtx = useContext(TodosContext);
     const uiCtx = useContext(UiContext);
 
+    const isLightThemeOn = uiCtx.isLightThemeOn;
+
     const formSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -40,21 +42,32 @@ const NewTodo = () => {
     return (
         <form className="new-todo-container" onSubmit={formSubmit}>
             <input
+                className={isLightThemeOn ? "light-theme--element" : ""}
                 autoFocus
                 type="text"
                 value={inputText}
                 onFocus={onFocusHandler}
                 onChange={inputChangeHandler}
             />
-            <button type="submit" title="add">
+            <button
+                className={isLightThemeOn ? "light-theme--element" : ""}
+                type="submit"
+                title="add"
+            >
                 ➕
             </button>
 
-            <button type="button" onClick={randomizeHandler} title="randomize">
+            <button
+                className={isLightThemeOn ? "light-theme--element" : ""}
+                type="button"
+                onClick={randomizeHandler}
+                title="randomize"
+            >
                 🎲
             </button>
 
             <button
+                className={isLightThemeOn ? "light-theme--element" : ""}
                 type="reset"
                 onClick={inputClearHandler}
                 title="clear"

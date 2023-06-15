@@ -7,81 +7,79 @@ import { useContext } from "react";
 import Prompt from "./components/Ui/Prompt.js";
 
 function App() {
-    const todosCtx = useContext(TodosContext);
-    const uiCtx = useContext(UiContext);
+  const todosCtx = useContext(TodosContext);
+  const uiCtx = useContext(UiContext);
 
-    const itemsLength = todosCtx.items.length;
-    const isEditModeOpen = uiCtx.isEditingTodos;
-    const isPromptOpen = uiCtx.isRemovingPromptOpen;
+  const itemsLength = todosCtx.items.length;
+  const isEditModeOpen = uiCtx.isEditingTodos;
+  const isPromptOpen = uiCtx.isRemovingPromptOpen;
+  const isLightThemeOn = uiCtx.isLightThemeOn;
 
-    const removeAllTodosHandler = () => {
-        uiCtx.openRemovingPrompt();
-    };
+  const removeAllTodosHandler = () => {
+    uiCtx.openRemovingPrompt();
+  };
 
-    const toggleEditModeHandler = () => {
-        uiCtx.closeRemovingPrompt();
-        uiCtx.toggleEditMode();
-        todosCtx.changeEditTodoId("");
-    };
+  const toggleEditModeHandler = () => {
+    uiCtx.closeRemovingPrompt();
+    uiCtx.toggleEditMode();
+    todosCtx.changeEditTodoId("");
+  };
 
-    // const [lightThemeOn, setIsLightThemeOn] = useState(false);
+  const changeThemeHandler = () => {
+    uiCtx.toggleUiTheme();
+  };
 
-    // const themeChangeHandler = () => {
-    //     const rootEl = document.getElementById("root");
+  return (
+    <div className={isLightThemeOn ? "app light-theme--bg" : "app"}>
+      <main>
+        <h1>
+          TOD
+          <span
+            title="toggle theme"
+            className="icon--toggle-theme"
+            onClick={changeThemeHandler}
+          >
+            {!isLightThemeOn ? "☀️" : "🌑"}
+          </span>
+        </h1>
 
-    //     if (!rootEl) return;
+        {!isPromptOpen && <NewTodo />}
 
-    //     if (lightThemeOn) {
-    //         rootEl.style.backgroundColor = "#000";
-    //         setIsLightThemeOn(false);
-    //     } else {
-    //         rootEl.style.backgroundColor = "#fff";
-    //         setIsLightThemeOn(true);
-    //     }
-    // };
-
-    return (
-        <>
-            {/* <button onClick={themeChangeHandler}>
-                {!lightThemeOn ? "☀️" : "🌙"}
-            </button>*/}
-
-            <h1>TODOS</h1>
-
-            {!isPromptOpen && <NewTodo />}
-
-            {itemsLength ? (
-                <div className="edit-mode-actions">
-                    {isEditModeOpen && !isPromptOpen && (
-                        <button
-                            type="button"
-                            onClick={removeAllTodosHandler}
-                            title="remove all"
-                        >
-                            ☠️
-                        </button>
-                    )}
-
-                    <button
-                        type="button"
-                        onClick={toggleEditModeHandler}
-                        title="edit todos mode"
-                    >
-                        {!isEditModeOpen ? "⚙️" : "🔓"}
-                    </button>
-                </div>
-            ) : null}
-
-            {isEditModeOpen && isPromptOpen && <Prompt />}
-
-            {!isPromptOpen && (
-                <>
-                    <TodosList />
-                    <CompletedTodos />
-                </>
+        {itemsLength ? (
+          <div className="edit-mode-actions">
+            {isEditModeOpen && !isPromptOpen && (
+              <button
+                className={isLightThemeOn ? "light-theme--element" : ""}
+                type="button"
+                onClick={removeAllTodosHandler}
+                title="remove all"
+              >
+                ☠️
+              </button>
             )}
-        </>
-    );
+
+            <button
+              className={isLightThemeOn ? "light-theme--element" : ""}
+              type="button"
+              onClick={toggleEditModeHandler}
+              title="edit todos mode"
+            >
+              {!isEditModeOpen ? "⚙️" : "🔓"}
+            </button>
+          </div>
+        ) : null}
+
+        {isEditModeOpen && isPromptOpen && <Prompt />}
+
+        {!isPromptOpen && (
+          <>
+            <TodosList />
+            <CompletedTodos />
+          </>
+        )}
+      </main>
+    </div>
+  );
 }
 
 export default App;

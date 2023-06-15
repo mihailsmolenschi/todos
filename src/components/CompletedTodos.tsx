@@ -7,6 +7,8 @@ const CompletedTodos = () => {
     const todosCtx = useContext(TodosContext);
     const uiCtx = useContext(UiContext);
 
+    const isLightThemeOn = uiCtx.isLightThemeOn;
+
     const filteredTodos = todosCtx.items.filter(
         (todo) => todo.status === "completed"
     );
@@ -29,6 +31,9 @@ const CompletedTodos = () => {
                         onClick={() => changeTodoStatusToInProgress(todo.id)}
                     >
                         <p
+                            className={
+                                isLightThemeOn ? "light-theme--element" : ""
+                            }
                             style={{
                                 textDecoration: "line-through",
                             }}
@@ -37,6 +42,9 @@ const CompletedTodos = () => {
                         </p>
                         {uiCtx.isEditingTodos && (
                             <button
+                                className={
+                                    isLightThemeOn ? "light-theme--element" : ""
+                                }
                                 onClick={() => todosCtx.removeTodo(todo.id)}
                                 title="remove"
                             >
